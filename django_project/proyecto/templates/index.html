@@ -1,0 +1,71 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Índice</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero is-primary is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-1">
+                    Proyecto de la asignatura de AII creado por Carolina Bernal Marchena
+                </h1>
+                <h2 class="subtitle is-4">
+                    Elige una opción para continuar
+                </h2>
+
+                {% if not cargado %}
+                    <!-- Solo mostrar si los datos NO están cargados -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="columns is-centered mt-6">
+                            <div class="column is-6">
+                                <button type="submit" class="button is-large is-success is-fullwidth has-text-weight-semibold" name="accion" value="cargar">
+                                    Cargar Datos de todo el proyecto
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    <!-- Mostrar estas opciones solo si los datos SÍ están cargados -->
+                    <div class="columns is-centered mt-6">
+                        <div class="column is-6">
+                            <a href="{% url 'wiki' %}" class="button is-large is-link is-fullwidth has-text-weight-semibold has-text-centered" style="white-space: normal;">
+                                Buscador de aves y mamíferos de España
+                            </a>
+                        </div>
+                    </div>
+                    <div class="columns is-centered mt-4">
+                        <div class="column is-4">
+                            <a href="{% url 'junta' %}" class="button is-large is-info is-fullwidth has-text-weight-semibold">
+                                Buscador ZEC/ZEPA
+                            </a>
+                        </div>
+                        <div class="column is-4">
+                            <a href="{% url 'observaciones' %}" class="button is-large is-info is-fullwidth has-text-weight-semibold">
+                                Buscador Observaciones
+                            </a>
+                        </div>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <p class="control mt-4">
+                            <button type="submit" class="button is-danger" name="accion" value="resetear">
+                                Resetear índice
+                            </button>
+                        </p>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+</body>
+</html>

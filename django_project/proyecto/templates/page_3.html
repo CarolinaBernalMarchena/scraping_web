@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscador Observaciones</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'wiki' %}">
+                <strong>Aves y mamíferos de España y su estado de conservación</strong>
+            </a>
+        </div>
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'junta' %}">
+                <strong>Buscador ZEC/ZEPA</strong>
+            </a>
+        </div>
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'observaciones' %}">
+                <strong>Buscador Observaciones</strong>
+            </a>
+        </div>
+
+        <div id="navbarBasic" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'home' %}">
+                    Inicio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">Buscador de Observaciones</h1>
+
+            <form method="post" class="box">
+                {% csrf_token %}
+
+                {% if not cargado %}
+                    <div class="field is-grouped is-grouped-centered">Por favor, vuelve a inicio para cargar los datos</div>
+                {% endif %}
+
+                {% if cargado %}
+                    <div class="field">
+                        <label class="label">Buscar por nombre</label>
+                        <div class="control">
+                            <input class="input" type="text" name="nombre" placeholder="Nombre común o científico">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Filtrar por fechas de observación</label>
+                        <div class="field is-grouped">
+                            <div class="control">Fecha primer avistamiento:
+                                <input class="input" type="text" name="fecha_primera" placeholder="YYYY-MM-DD">
+                            </div>
+                            <div class="control">Fecha último avistamiento:
+                                <input class="input" type="text" name="fecha_ultima" placeholder="YYYY-MM-DD">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped is-grouped-multiline mt-4">
+                        <p class="control">
+                            <button type="submit" class="button is-info" name="accion" value="buscar">Buscar</button>
+                        </p>
+                        <p class="control">
+                            <button type="submit" class="button is-link" name="accion" value="listar">Listar todo</button>
+                        </p>
+                        <p class="control">
+                            <button type="submit" class="button is-warning" name="accion" value="top_observaciones">Top Observaciones</button>
+                        </p>
+                        <p class="control">
+                            <button type="submit" class="button is-success" name="accion" value="recomendar_especies">Recomendaciones</button>
+                        </p>
+                    </div>
+                {% endif %}
+
+            </form>
+
+            {% if mensaje_resultados %}
+                <div class="notification is-info is-light">
+                    {{ mensaje_resultados }}
+                </div>
+            {% endif %}
+
+            {% if resultados %}
+                <div class="box">
+                    <h2 class="subtitle">Resultados:</h2>
+                    <div class="content">
+                        <ul>
+                            {% for r in resultados %}
+                                <li>
+                                    <strong>🧬{{ r.nombre_cientifico }}</strong> — 📛{{ r.nombre_comun }}<br>
+                                    <small>
+                                        📅 Primera vez observado: {{ r.fecha_primera }} | Última vez observado: {{ r.fecha_ultima }}<br>
+                                        🔢 Observaciones: {{ r.observaciones }} | Individuos: {{ r.individuos }}<br>
+                                        {% if r.recurrencia %}
+                                            ♻️ Recurrencia: {{ r.recurrencia|floatformat:2 }} obs/día<br>
+                                        {% endif %}
+                                    </small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}  
+            {% if recomendaciones %}
+                <div class="box">
+                    <h2 class="subtitle">Especies Más Observadas (Recomendaciones):</h2>
+                    <div class="content">
+                        <ul>
+                            {% for especie in recomendaciones %}
+                                <li>
+                                    <strong>🧬{{ especie.nombre_cientifico }}</strong> — 📛{{ especie.nombre_comun }}<br>
+                                    <small>🔢 Observaciones: {{ especie.observaciones }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>

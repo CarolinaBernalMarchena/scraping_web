@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Espacios ZEC/ZEPA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'wiki' %}">
+                <strong>Aves y mamíferos de España y su estado de conservación</strong>
+            </a>
+        </div>
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'junta' %}">
+                <strong>Buscador ZEC/ZEPA</strong>
+            </a>
+        </div>
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'observaciones' %}">
+                <strong>Buscador Observaciones</strong>
+            </a>
+        </div>
+
+        <div id="navbarBasic" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'home' %}">
+                    Inicio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">Búsqueda de Espacios ZEC/ZEPA</h1>
+
+            <form method="post" class="box">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                {% if not cargado %}
+                    <div class="field is-grouped is-grouped-centered">Por favor, vuelve a inicio para cargar los datos</div>
+                {% endif %}
+
+                {% if cargado %}
+                    <div class="field">
+                        <label class="label">Nombre del espacio</label>
+                        <div class="control">
+                            <input class="input" type="text" name="nombre" placeholder="Ej: Doñana" value="{{ request.POST.nombre }}">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Superficie mínima (ha)</label>
+                        <div class="control">
+                            <input class="input" type="number" step="1" name="min_sup" placeholder="Ej: 1000" value="{{ request.POST.min_sup }}">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Superficie máxima (ha)</label>
+                        <div class="control">
+                            <input class="input" type="number" step="1" name="max_sup" placeholder="Ej: 5000" value="{{ request.POST.max_sup }}">
+                        </div>
+                    </div>
+                    <div class="field is-grouped is-grouped-multiline">
+                        <p class="control">
+                            <button type="submit" class="button is-info" name="accion" value="buscar">Buscar</button>
+                        </p>
+                        <p class="control">
+                            <button type="submit" class="button is-link" name="accion" value="listar">Listar todo</button>
+                        </p>
+                        <p class="control">
+                            <button type="submit" class="button is-success" name="accion" value="recomendar_espacios">Recomendaciones</button>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" name="fuzzy" {% if request.POST.fuzzy %}checked{% endif %}>
+                            Activar búsqueda difusa (fuzzy)
+                        </label>
+                     
+                        <label class="checkbox">
+                            <input type="checkbox" name="ordenarPorSuperficie" {% if request.POST.ordenarPorSuperficie %}checked{% endif %}>
+                            Activar ordenación por superficie
+                        </label>
+                    </div>
+                {% endif %}
+            </form>
+            {% if mensaje_resultados %}
+                <div class="notification is-info is-light">
+                    {{ mensaje_resultados }}
+                </div>
+            {% endif %}
+            {% if resultados %}
+                <div class="box">
+                    <h2 class="subtitle">Resultados:</h2>
+                    <div class="content">
+                        <ul>
+                            {% for r in resultados %}
+                                <li>
+                                    <strong>{{ r.espacio }}</strong> — {{ r.superficie_total|floatformat:2 }} ha<br>
+                                    <small>ZEC: {{ r.declaracion_zec }}, ZEPA: {{ r.declaracion_zepa }}, Plan: {{ r.plan_vigor }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+            {% if recomendaciones %}
+                <div class="box">
+                    <h2 class="subtitle">Espacios ZEC/ZEPA similares que te pueden interesar:</h2>
+                    <div class="content">
+                        <ul>
+                            {% for espacio in recomendaciones %}
+                                <li>
+                                    <strong>{{ espacio.nombre }}</strong> — {{ espacio.superficie_total|floatformat:2 }} ha<br>
+                                    <small>ZEC: {{ espacio.declaracion_zec }}, ZEPA: {{ espacio.declaracion_zepa }}, Plan: {{ espacio.plan_vigor }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>

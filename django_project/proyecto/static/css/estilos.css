@@ -1,0 +1,43 @@
+.estado-label.datos-insuficientes-dd {
+    color: #00008B; /* Azul oscuro */
+    font-weight: bold;
+}
+.estado-label.preocupacion-menor-lc {
+    color: #228B22; /* Verde */
+    font-weight: bold;
+}
+
+.estado-label.casi-amenazado-nt {
+    color: #FFD700; /* Amarillo */
+    font-weight: bold;
+}
+
+.estado-label.vulnerable-vu {
+    color: #FFA500; /* Naranja */
+    font-weight: bold;
+}
+
+.estado-label.en-peligro-en {
+    color: #FF4500; /* Rojo claro */
+    font-weight: bold;
+}
+
+.estado-label.en-peligro-critico-cr {
+    color: #8B0000; /* Rojo oscuro */
+    font-weight: bold;
+}
+
+.estado-label.extinto-en-estado-silvestre-ew {
+    color: #8B4513; /* Marrón */
+    font-weight: bold;
+}
+
+.estado-label.extinto-ex {
+    color: #000000; /* Negro */
+    font-weight: bold;
+}
+
+.estado-label.no-evaluado-ne {
+    color: #555555; /* Gris oscuro */
+    font-weight: bold;
+}

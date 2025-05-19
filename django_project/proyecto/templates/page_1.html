@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Aves y mamíferos de España y su estado de conservación</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'wiki' %}">
+                <strong>Aves y mamíferos de España y su estado de conservación</strong>
+            </a>
+        </div>
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'junta' %}">
+                <strong>Buscador ZEC/ZEPA</strong>
+            </a>
+        </div>
+
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'observaciones' %}">
+                <strong>Buscador Observaciones</strong>
+            </a>
+        </div>
+
+        <div id="navbarBasic" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'home' %}">
+                    Inicio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">Aves y mamíferos de España y su estado de conservación</h1>
+
+            <form method="post" class="box">
+                {% csrf_token %}
+                {{ form.as_p }}
+                
+                {% if not cargado %}
+                    <div class="field is-grouped is-grouped-centered">Por favor, vuelve a inicio para cargar los datos</div>
+                {% endif %}
+
+                {% if cargado %}
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="field">
+                            <label class="label">Buscar por nombre</label>
+                            <div class="control">
+                                <input class="input" type="text" name="nombre" placeholder="Introduce nombre común o científico">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Filtrar por estado de conservación</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select name="estado_conservacion">
+                                        <option value="">-- Todos los estados --</option>
+                                        <option value="Datos insuficientes (DD)">Datos Insuficientes</option>
+                                        <option value="Preocupación menor (LC)">Preocupación Menor</option>
+                                        <option value='Casi amenazado (NT)'>Casi Amenazado</option>
+                                        <option value="Vulnerable (VU)">Vulnerable</option>
+                                        <option value="En peligro">En Peligro</option>
+                                        <option value="Extinto en estado silvestre (EW)">Extinto en Estado Silvestre</option>
+                                        <option value="Extinto (EX)">Extinto</option>
+                                        <option value="No evaluado (NE)">No Evaluado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="descripcion" value="1">
+                                    Buscar también en la descripción
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="field is-grouped is-grouped-multiline mt-4">
+                            <p class="control">
+                                <button type="submit" class="button is-info" name="accion" value="buscar">Buscar</button>
+                            </p>
+                            <p class="control">
+                                <button type="submit" class="button is-link" name="accion" value="listar">Listar todo</button>
+                            </p>
+                            <p class="control">
+                                <button type="submit" class="button is-success" name="accion" value="recomendar_relacionadas">Recomendaciones</button>
+                            </p>
+                        </div>
+                    </form>
+                {% endif %}
+
+            </form>
+
+            {% if mensaje_resultados %}
+                <div class="notification is-info is-light">
+                    {{ mensaje_resultados }}
+                </div>
+            {% endif %}
+
+            {% if resultados %}
+                <div class="box">
+                    <h2 class="subtitle">Resultados:</h2>
+                    <div class="content">
+                        <ul>
+                            {% for r in resultados %}
+                                <li>
+                                    <strong>🧬{{ r.nombre_cientifico }}</strong> — 📛{{ r.nombre_comun }}<br>
+                                    <small>📍Población Protegida: {{ r.poblacion_protegida }}<br>📉Estado de Conservación: <span class="estado-label {{ r.estado_conservacion|slugify }}">{{ r.estado_conservacion }}</span><br>📝Info: {{ r.info }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+            {% if recomendaciones %}
+                <div class="box">
+                    <h2 class="subtitle">Animales que te pueden interesar observar según tu búsqueda:</h2>
+                    <div class="content">
+                        <ul>
+                            {% for especie in recomendaciones %}
+                                <li>
+                                    <strong>🧬{{ especie.nombre_cientifico }}</strong> — 📛{{ especie.nombre_comun }}<br>
+                                    <small>🔢 Observaciones: {{ especie.observaciones }} | Última vez observado: {{ especie.fecha_ultima }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>
