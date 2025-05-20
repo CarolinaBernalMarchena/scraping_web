@@ -54,7 +54,7 @@
                     <div class="field">
                         <label class="label">Buscar por nombre</label>
                         <div class="control">
-                            <input class="input" type="text" name="nombre" placeholder="Nombre común o científico">
+                            <input class="input" type="text" name="nombre" placeholder="Nombre común o científico" value="{{ request.POST.nombre }}">
                         </div>
                     </div>
 
@@ -62,10 +62,10 @@
                         <label class="label">Filtrar por fechas de observación</label>
                         <div class="field is-grouped">
                             <div class="control">Fecha primer avistamiento:
-                                <input class="input" type="text" name="fecha_primera" placeholder="YYYY-MM-DD">
+                                <input class="input" type="text" name="fecha_primera" placeholder="YYYY-MM-DD" value="{{ request.POST.fecha_primera }}">
                             </div>
                             <div class="control">Fecha último avistamiento:
-                                <input class="input" type="text" name="fecha_ultima" placeholder="YYYY-MM-DD">
+                                <input class="input" type="text" name="fecha_ultima" placeholder="YYYY-MM-DD" value="{{ request.POST.fecha_ultima }}">
                             </div>
                         </div>
                     </div>

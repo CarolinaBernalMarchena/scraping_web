@@ -1,4 +1,4 @@
-from scrapping import jAndalucia_v3, wikipedia_v3, observation_v3
+from scraping import jAndalucia_v3, wikipedia_v3, observation_v3
 
 def cargar_todos_los_datos():
     resultados = {}

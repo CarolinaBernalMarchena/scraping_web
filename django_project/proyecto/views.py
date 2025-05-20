@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from scrapping import jAndalucia_v3, wikipedia_v3, observation_v3
+from scraping import jAndalucia_v3, wikipedia_v3, observation_v3
 from .recommendations import recomendar_especies, recomendar_relacionadas, recomendar_espacios
 from .home import cargar_todos_los_datos
 
@@ -105,21 +105,22 @@ def page_2(request):
 
     if request.method == 'POST':
         accion = request.POST.get('accion')
-
         if accion == 'listar':
             resultados = jAndalucia_v3.listar_bd()
             return render(request, 'page_2.html', {'cargado': cargado, 'resultados': resultados, 'request': request})
 
         elif accion == 'buscar':
-            nombre = request.POST.get('nombre', '').strip() if request.POST.get('nombre') != "" else None
+            print(request.POST)
+            espacio = request.POST.get('espacio', '').strip() if request.POST.get('espacio') != "" else None
             min_sup = request.POST.get('min_sup') if request.POST.get('min_sup') != "" else None
             max_sup = request.POST.get('max_sup') if request.POST.get('max_sup') != "" else None
             ordenarPorSuperficie = request.POST.get('ordenarPorSuperficie')
             fuzzy_activo = request.POST.get('fuzzy')
+            print(f"DEBUG -> espacio: {espacio}, min_sup: {min_sup}, max_sup: {max_sup}, fuzzy: {fuzzy_activo}, ordenar: {ordenarPorSuperficie}")
             resultados = []
 
             resultados = jAndalucia_v3.buscar_espacios_combinada(
-                espacio=nombre,
+                espacio=espacio,
                 min_sup=min_sup,
                 max_sup=max_sup,
                 fuzzy=fuzzy_activo,
@@ -199,11 +200,7 @@ def page_3(request):
 
         elif accion == 'top_observaciones':
             resultados = observation_v3.especies_mas_observadas(limit=10)
-            return render(request, 'page_3.html', {
-                'cargado': cargado,
-                'resultados': resultados,
-                'mensaje_resultados': mensaje_resultados,
-            })
+            return render(request, 'page_3.html', {'cargado': cargado, 'resultados': resultados, 'request': request})
         
         elif accion == "recomendar_especies":
             nombre_recomendacion = request.POST.get("nombre", "").strip()
