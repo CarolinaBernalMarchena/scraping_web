@@ -19,3 +19,8 @@ pip install -r requirements.txt
 Python manage.py runserver
 #### Once everything is ready, we will open a browser and access:
 http://127.0.0.1:8000
+
+### Some screenshots from the project:
+![Captura de pantalla 2025-05-20 134214](https://github.com/user-attachments/assets/b071e168-bf0a-49be-8f15-c86d67ddc5f3)
+![Captura de pantalla 2025-05-20 134420](https://github.com/user-attachments/assets/8b9a884d-3d91-44e9-b976-15e65715edaa)
+*Home pages with and without the data loaded in the whoosh index*
