@@ -170,11 +170,11 @@ def buscar_avanzado(nombre=None, fecha_primera=None, fecha_ultima=None, index_di
         if not query:
             return "sin_criterio"
 
-        #Ejecutar búsqueda
+        #Ejecutamos la búsqueda
         whoosh_results = searcher.search(query, limit=None)
         print("whoosh_results:", whoosh_results)
 
-        #Convertir resultados a lista de diccionarios
+        #Convertimos los resultados en una lista de diccionarios
         resultados = []
         for row in whoosh_results:
             try:

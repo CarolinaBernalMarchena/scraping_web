@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <!-- Hero Section -->
+    <!-- CABECERA -->
     <section class="hero is-primary is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -21,7 +21,7 @@
                 </h2>
 
                 {% if not cargado %}
-                    <!-- Solo mostrar si los datos NO están cargados -->
+                    <!-- Solo mostramos esto si los datos NO están cargados -->
                     <form method="post">
                         {% csrf_token %}
                         <div class="columns is-centered mt-6">
@@ -33,7 +33,7 @@
                         </div>
                     </form>
                 {% else %}
-                    <!-- Mostrar estas opciones solo si los datos SÍ están cargados -->
+                    <!-- Mostramos estas opciones solo si los datos SÍ están cargados -->
                     <div class="columns is-centered mt-6">
                         <div class="column is-6">
                             <a href="{% url 'wiki' %}" class="button is-large is-link is-fullwidth has-text-weight-semibold has-text-centered" style="white-space: normal;">

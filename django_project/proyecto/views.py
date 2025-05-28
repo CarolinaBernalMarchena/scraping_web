@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from scraping import jAndalucia_v3, wikipedia_v3, observation_v3
-from .recommendations import recomendar_especies, recomendar_relacionadas, recomendar_espacios
 from .home import cargar_todos_los_datos
 
 def home(request):
@@ -71,30 +70,6 @@ def page_1(request):
                 'mensaje_resultados': mensaje_resultados,
                 'request': request,
             })
-        
-        elif accion == 'recomendar_relacionadas':
-            nombre_recomendacion = request.POST.get("nombre", "").strip()
-            resultados = []
-            recomendaciones = []
-            
-            if nombre_recomendacion:
-                recomendaciones = recomendar_relacionadas(nombre_recomendacion)
-                if isinstance(recomendaciones, str):
-                    mensaje_resultados = recomendaciones
-                    recomendaciones = []
-                else:
-                    mensaje_resultados = f"Especies recomendadas en base a tu búsqueda en Wikipedia ({nombre_recomendacion}), encontradas en la base de datos de observaciones:"
-            else:
-                mensaje_resultados = "Debes introducir un nombre científico para obtener recomendaciones."
-                recomendaciones = []
-                resultados = []
-
-            return render(request, 'page_1.html', {
-                'resultados': resultados,
-                'recomendaciones': recomendaciones,
-                'mensaje_resultados': mensaje_resultados,
-                'cargado': cargado,
-            })
 
     return render(request, 'page_1.html', {'cargado': cargado,'request': request})
 
@@ -138,28 +113,6 @@ def page_2(request):
                 'mensaje_resultados': mensaje_resultados,
                 'request': request,
             })
-    
-        elif accion == "recomendar_espacios":
-            nombre_recomendacion = request.POST.get("nombre", "").strip()
-            if nombre_recomendacion:
-                recomendaciones = recomendar_espacios(nombre_recomendacion, top_n=5)
-                if isinstance(recomendaciones, str):
-                    mensaje_resultados = recomendaciones
-                    recomendaciones = []
-                else:
-                    mensaje_resultados = f"Espacios recomendados relacionados con {nombre_recomendacion} (según superficie, plan en vigor y nombre similar):"
-            else:
-                mensaje_resultados = "Debes introducir el nombre de un espacio ZEC/ZEPA para recomendar."
-                recomendaciones = []
-                resultados = []
-
-            return render(request, 'page_2.html', {
-                'resultados': resultados,
-                'recomendaciones': recomendaciones,
-                'mensaje_resultados': mensaje_resultados,
-                'cargado': cargado,
-                'request': request
-            })
 
     return render(request, 'page_2.html', {'cargado': cargado, 'request': request})
 
@@ -202,26 +155,4 @@ def page_3(request):
             resultados = observation_v3.especies_mas_observadas(limit=10)
             return render(request, 'page_3.html', {'cargado': cargado, 'resultados': resultados, 'request': request})
         
-        elif accion == "recomendar_especies":
-            nombre_recomendacion = request.POST.get("nombre", "").strip()
-            if nombre_recomendacion:
-                recomendaciones =  recomendar_especies(nombre_recomendacion, top_n=5)
-                if isinstance(recomendaciones, str):
-                    mensaje_resultados = recomendaciones
-                    recomendaciones = []
-                else:
-                    mensaje_resultados = f"Especies recomendadas para {nombre_recomendacion} (teniendo en cuenta valores como rango de observaciones, fecha de su última observación y nombres similares): "
-            else:
-                mensaje_resultados = "Debes introducir un nombre de especie para recomendar."
-                recomendaciones = []
-                resultados = []
-
-            return render(request, 'page_3.html', {
-                'resultados': resultados,
-                'recomendaciones': recomendaciones,
-                'mensaje_resultados': mensaje_resultados,
-                'cargado': cargado,
-            })
-
-
     return render(request, 'page_3.html', {'cargado': cargado,'request': request})

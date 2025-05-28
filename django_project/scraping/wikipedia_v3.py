@@ -163,7 +163,7 @@ def buscar_animales(termino, estado=None, descripcion=False):
             parser = MultifieldParser(campos, schema=ix.schema, fieldboosts=boosts)
             query = parser.parse(termino)
 
-        # Si hay filtro por estado, creamos la subquery y la combinamos con AND
+        #Si hay filtro por estado, creamos la subquery y la combinamos con AND
         if estado:
             qp = MultifieldParser(["estado_conservacion"], schema=ix.schema)
             estado_query = qp.parse(estado)
@@ -174,7 +174,7 @@ def buscar_animales(termino, estado=None, descripcion=False):
             print("query",query)
 
 
-        # Si no se ha introducido ningún criterio, devolvemos aviso
+        #Si no se ha introducido ningún criterio, devolvemos aviso
         if not query:
             return "sinCriterio"
 

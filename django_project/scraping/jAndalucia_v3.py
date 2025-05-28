@@ -14,22 +14,22 @@ if not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverif
     ssl._create_default_https_context = ssl._create_unverified_context
 
 def limpiar_estado(texto):
-    #Quitar ESXXXXXXX (7 números después de "ES")
+    #Quitamos ESXXXXXXX (7 números después de "ES")
     texto = re.sub(r'ES\d{7}\s*', '', texto)
     
-    #Quitar "(Pdf, X.XX MB)" o "(Pdf, X.XX MB)"
+    #Quitamos "(Pdf, X.XX MB)" o "(Pdf, X.XX MB)"
     texto = re.sub(r'\(Pdf, \d+\.\d{1,2} MB\)', '', texto)
 
-     #Quitar "(***)", "(**)", "(*)" si aparecen después del nombre
+    #Quitamos "(***)", "(**)", "(*)" si aparecen después del nombre
     texto = re.sub(r'\s*\(\*+\)', '', texto)
 
-    #Quitar cualquier cantidad de asteriscos (*) si aparecen solos después del nombre
+    #Quitamos cualquier cantidad de asteriscos (*) si aparecen solos después del nombre
     texto = re.sub(r'\s*\*+', '', texto)
 
     return texto.strip()
 
 def limpiar_celda(texto):
-    #""" Limpia el texto de una celda y reemplaza '-' por 'Sin datos'. """
+    #""" Limpiamos el texto de una celda y reemplaza '-' por 'Sin datos'. """
     texto = texto.strip()
     return "Sin datos" if texto == "-" else texto
 
@@ -44,15 +44,15 @@ def extraer_datos():
     #Verificamos si se encuentra la tabla
     if not tabla:
         print("No se encontró la tabla esperada.")
-        return []  # Retorna una lista vacía si no se encuentra la tabla
+        return []  #Retorna una lista vacía si no se encuentra la tabla
     
     #Tomamos la primera tabla (en caso de haber más de una)
-    filas = tabla[0].find_all("tr")  # Buscamos todas las filas <tr> dentro de la tabla
+    filas = tabla[0].find_all("tr")  #Buscamos todas las filas <tr> dentro de la tabla
 
     #Verificamos si se encontraron filas
     if not filas:
         print("No se encontraron filas en la tabla.")
-        return []  # Retorna una lista vacía si no se encuentran filas
+        return []  #Retorna una lista vacía si no se encuentran filas
 
     datos_zepa_zec = []
 
